@@ -1,25 +1,15 @@
-/*client/serveur
-	Sending :
-		*ID
-		*Freq sensor
-		*Areq sensor
-		*Flevel sensor
-	Receiving :
-		*ID
-		*start*/
-
 #pragma once
 
-typedef struct s2c
+typedef struct s2c // From Server to Client
 {
-	int ID;
-	bool start;
+	int ID = 0;
+	bool start = false;
 } t_s2c;
 
-typedef struct c2s
+typedef struct c2s // From Client to Server
 {
-	int ID;
-	bool Freq_sensor;
-	bool Areq_sensor;
-	bool Flevel_sensor;
+	int ID = 0;
+	bool Freq_sensor = false;
+	bool Areq_sensor = false;
+	bool Flevel_sensor = false;
 } t_c2s;
