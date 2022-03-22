@@ -3,19 +3,19 @@
 
 #define DEBUG
 // Uncommit this to debug OnDataSent
-// #define ONDATASENT
+#define ONDATASENT
 // Uncommit this to debug OnDataRecv
-// #define ONDATARECV
+#define ONDATARECV
 // Uncommit this to debug SendReadings
 // #define SENDREADINGS
 // Uncommit this to debug updateDisplay
-#define UPDATEDISPLAY
+//#define UPDATEDISPLAY
 // Uncommit this to chose board ID 1
 #define BOARDID1
 // Debug session
 // Uncommit this to chose board ID 2
 // #define BOARDID2
-// Debug session
+//Debug session
 #ifdef DEBUG
 #define D(x) x
 #else

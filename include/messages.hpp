@@ -1,8 +1,10 @@
 #pragma once
+#include "my_debug.hpp"
 
 typedef struct s2c // From Server to Client
 {
-	int ID = 0;
+	DBG_BID1(int ID = 1;)
+	DBG_BID2(int ID = 2;)
 	bool start = false;
 } t_s2c;
 

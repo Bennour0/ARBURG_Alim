@@ -2,17 +2,14 @@
 #include <WiFi.h>
 #include <esp_now.h>
 #include "messages.hpp"
-#include "my_debug.hpp"
 
+// Central Mac address :
 uint8_t broadcastAddress[] = {0x7C, 0x9E, 0xBD, 0x62, 0x12, 0x98};
-typedef struct statistics
-{
-    int in = 0;
-    int out = 0;
-} t_stat;
 
-t_stat s;
+// struct to sent to the central
 t_s2c s2c;
+
+// struct to recieve from the central
 t_c2s c2s;
 
 // Sensors pins assignments :
@@ -25,10 +22,19 @@ t_c2s c2s;
 #define DRYMAXVAL 14  // DRYMAX valve pin intialisation
 #define CHARGERVAL 12 // Charger valve pin intialisation
 
+// Initialization Fonction
 void initESPNOW();
+
+// Callback when data is sent fonction
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
+
+// Callback when data is received fonction
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+
+// Send Readings fonction
 void SendReadings();
+
+// Send Readings for RTOS
 void Send_task(void *parameter);
 
 void setup()
@@ -79,9 +85,8 @@ void initESPNOW()
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
+
     DBG_ODS(Serial.print("Inside OnDataSent\n");)
-    s.out++;
-    DBG_ODS(Serial.print("Send messages = %d\n", s.out);)
     /*DBG_ODS(Serial.print("\r\nLast Packet Send Status:\t");)
     DBG_ODS(Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");)
     if (status == 0)
@@ -97,8 +102,6 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     DBG_ODR(Serial.print("Inside OnDataRecv\n");)
-    s.in++;
-    DBG_ODR(Serial.print("Received messages = %d\n", s.in);)
     /*DBG_ODR(char macStr[18];)
     DBG_ODR(Serial.print("Packet received from: ");)
     DBG_ODR(snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
