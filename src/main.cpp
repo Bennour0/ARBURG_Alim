@@ -15,6 +15,16 @@ t_stat s;
 t_s2c s2c;
 t_c2s c2s;
 
+// Sensors pins assignments :
+#define FEEDMAXREQ 25 // FEEDMAX Requirement sensor pin intialisation
+#define ARBURGREQ 26  // ARBURG Requirement sensor pin intialisation
+#define FEEDMAXLVL 27 // FEEDMAX Level sensor pin intialisation
+
+// Actuators pins assignments :
+#define FEEDMAXVAL 13 // FEEDMAX valve pin intialisation
+#define DRYMAXVAL 14  // DRYMAX valve pin intialisation
+#define CHARGERVAL 12 // Charger valve pin intialisation
+
 void initESPNOW();
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
@@ -60,10 +70,10 @@ void initESPNOW()
     xTaskCreatePinnedToCore(
         Send_task,   // Function to be called
         "Send_task", // Name of task
-        5000,             // stack size (bytes in ESP32, words in FreeRTOS)
-        NULL,             // Parameter to pass to function
-        1,                // Task priority (0 to configMAX_PRIORITIES - 1)
-        NULL,             // Task handle
+        5000,        // stack size (bytes in ESP32, words in FreeRTOS)
+        NULL,        // Parameter to pass to function
+        1,           // Task priority (0 to configMAX_PRIORITIES - 1)
+        NULL,        // Task handle
         CONFIG_ARDUINO_RUNNING_CORE);
 }
 
@@ -120,4 +130,4 @@ void Send_task(void *parameter)
         SendReadings();
         delay(1000);
     }
-}    
+}
