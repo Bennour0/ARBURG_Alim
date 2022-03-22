@@ -4,15 +4,28 @@
 #include "messages.hpp"
 #include "my_debug.hpp"
 
+// Client MAC address : 
 uint8_t broadcastAddress[] = {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C};
 
+// Initialization fonction
 void initESPNOW();
+
+// Callback when data is sent fonction
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
+
+// Callback when data is received fonction
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+
+// Send readings fonction
 void SendReadings();
+
+// Send readings task for RTOS
 void Send_task(void *parameter);
 
+// stuct to be sent by central
 t_s2c s2c;
+
+//struct to be received by central
 t_c2s c2s;
 
 void setup()
