@@ -114,6 +114,10 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 
 void SendReadings()
 {
+    // Readings that will be sent
+    c2s.Freq_sensor = digitalRead(FEEDMAXREQ);
+    c2s.Areq_sensor = digitalRead(ARBURGREQ);
+    c2s.Flevel_sensor = digitalRead(FEEDMAXLVL);
     // Send message via ESP-NOW
     esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&c2s, sizeof(c2s));
     if (result == ESP_OK)
