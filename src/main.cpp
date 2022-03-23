@@ -8,6 +8,10 @@
 uint8_t broadcastAddress1[] = {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C};
 // Client 2 MAC address :
 uint8_t broadcastAddress2[] = {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0};
+// Struct that will hold Client 1 receivings
+t_c2s Client1_data;
+// Struct that will hold Client 2 receivings
+t_c2s Client2_data;
 
 // Initialization fonction
 void initESPNOW();
@@ -104,19 +108,27 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     DBG_ODR(Serial.print("Inside OnDataRecv\n");)
-    /*DBG_ODR(char macStr[18];)
-    DBG_ODR(Serial.print("Packet received from: ");)
-    DBG_ODR(snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-                     mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);)
-    DBG_ODR(Serial.println(macStr);)
-    memcpy(&Rec_Readings, incomingData, sizeof(Rec_Readings));
-    holding_Data.id = Rec_Readings.id;
-    holding_Data.stat_Cen = Rec_Readings.stat_Cen;*/
+    memcpy(&c2s, incomingData, sizeof(c2s));
+    if (c2s.ID == 1)
+    {
+        Client1_data.ID = c2s.ID;
+        Client1_data.Freq_sensor = c2s.Freq_sensor;
+        Client1_data.Areq_sensor = c2s.Areq_sensor;
+        Client1_data.Flevel_sensor = c2s.Flevel_sensor;
+    }
+    if (c2s.ID == 2)
+    {
+        Client2_data.ID = c2s.ID;
+        Client2_data.Freq_sensor = c2s.Freq_sensor;
+        Client2_data.Areq_sensor = c2s.Areq_sensor;
+        Client2_data.Flevel_sensor = c2s.Flevel_sensor;
+    }
 }
+
 void SendReadings()
 {
     // Send message via ESP-NOW
-    esp_err_t result = esp_now_send(0, (uint8_t *)&c2s, sizeof(c2s));
+    esp_err_t result = esp_now_send(0, (uint8_t *)&s2c, sizeof(s2c));
     if (result == ESP_OK)
     {
         DBG_SR(Serial.println("Sent with success");)
@@ -126,6 +138,7 @@ void SendReadings()
         DBG_SR(Serial.println("Error sending the data");)
     }
 }
+
 void Send_task(void *parameter)
 {
     while (1)
