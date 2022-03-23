@@ -11,10 +11,10 @@
 // Uncommit this to debug updateDisplay
 //#define UPDATEDISPLAY
 // Uncommit this to chose board ID 1
-#define BOARDID1
+// #define BOARDID1
 // Debug session
 // Uncommit this to chose board ID 2
-// #define BOARDID2
+#define BOARDID2
 //Debug session
 #ifdef DEBUG
 #define D(x) x

@@ -9,8 +9,7 @@ typedef struct s2c // From Server to Client
 
 typedef struct c2s // From Client to Server
 {
-	DBG_BID1(int ID = 1;)
-	DBG_BID2(int ID = 2;)
+	int ID = -1;
 	bool Freq_sensor;
 	bool Areq_sensor;
 	bool Flevel_sensor;

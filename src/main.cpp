@@ -15,6 +15,9 @@ t_c2s c2s;
 // struct that holds serveur/central receivings
 t_s2c Central_data;
 
+#define PID          1
+
+
 // Sensors pins assignments :
 #define FEEDMAXREQ 25 // FEEDMAX Requirement sensor pin intialisation
 #define ARBURGREQ 26  // ARBURG Requirement sensor pin intialisation
@@ -43,7 +46,9 @@ void Send_task(void *parameter);
 void setup()
 {
     Serial.begin(115200);
+    c2s.ID = PID;
     initESPNOW();
+    // Sensors pins configurations
     pinMode(FEEDMAXREQ, INPUT);
     pinMode(ARBURGREQ, INPUT);
     pinMode(FEEDMAXLVL, INPUT);
