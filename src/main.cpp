@@ -181,8 +181,9 @@ void ShowReceivings()
 
     for(int i=0; i<NBARBURG; i++){
         Serial.printf("%d --> [FEEDMAX %s; ARBURG %s; LEVELFEEDMAX %s]\n",
-        SENSORSTATE(arburgs_data[i].Areq_sensor),
+        arburgs_data[i].ID,
         SENSORSTATE(arburgs_data[i].Freq_sensor),
+        SENSORSTATE(arburgs_data[i].Areq_sensor),
         SENSORSTATE(arburgs_data[i].Flevel_sensor));
     }
     /*DBG_SHR(Serial.print(" Freq : ");)
