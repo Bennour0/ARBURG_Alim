@@ -28,6 +28,8 @@ void SendReadings();
 // Send readings task for RTOS
 void Send_task(void *parameter);
 
+void ShowReceivings();
+
 // stuct to be sent by central
 t_s2c s2c;
 
@@ -146,4 +148,22 @@ void Send_task(void *parameter)
         SendReadings();
         delay(1000);
     }
+}
+void ShowReceivings()
+{
+    DBG_SHR(Serial.print("ID = 1 ");)
+    DBG_SHR(Serial.print(" Freq : ");)
+    DBG_SHR(Serial.print(Client1_data.Freq_sensor);)
+    DBG_SHR(Serial.print(" Areq : ");)
+    DBG_SHR(Serial.print(Client1_data.Areq_sensor);)
+    DBG_SHR(Serial.print(" Flevel : ");)
+    DBG_SHR(Serial.print(Client1_data.Flevel_sensor);)
+    DBG_SHR(Serial.print(" || ");)
+    DBG_SHR(Serial.print("ID = 2 ");)
+    DBG_SHR(Serial.print(" Freq : ");)
+    DBG_SHR(Serial.print(Client2_data.Freq_sensor);)
+    DBG_SHR(Serial.print(" Areq : ");)
+    DBG_SHR(Serial.print(Client2_data.Areq_sensor);)
+    DBG_SHR( Serial.print(" Flevel : ");)
+    DBG_SHR(Serial.print(Client2_data.Flevel_sensor);)
 }
