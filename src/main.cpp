@@ -4,10 +4,15 @@
 #include "messages.hpp"
 #include "my_debug.hpp"
 
-// Client 1 MAC address :
+// All MAC ADD
+uint8_t arburgMacAdd [][6] = {{0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C},
+                {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0}};
+#define NBARBURG        2
+/*// Client 1 MAC address :
 uint8_t broadcastAddress1[] = {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C};
 // Client 2 MAC address :
 uint8_t broadcastAddress2[] = {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0};
+*/
 // Struct that will hold Client 1 receivings
 t_c2s Client1_data;
 // Struct that will hold Client 2 receivings
@@ -63,6 +68,18 @@ void initESPNOW()
 
     esp_now_peer_info_t peerInfo;
 
+    // Registering peers
+    for(int i=0; i<NBARBURG; i++){
+        memcpy(peerInfo.peer_addr, arburgMacAdd[i], 6);
+        peerInfo.channel = 0;
+        peerInfo.encrypt = false;
+        if (esp_now_add_peer(&peerInfo) != ESP_OK)
+        {
+            Serial.println("Failed to add peer");
+            return;
+        }
+    }
+    /*
     // Register 1 peer
     memcpy(peerInfo.peer_addr, broadcastAddress1, 6);
     peerInfo.channel = 0;
@@ -82,6 +99,7 @@ void initESPNOW()
         Serial.println("Failed to add peer");
         return;
     }
+    */
     xTaskCreatePinnedToCore(
         Send_task,   // Function to be called
         "Send_task", // Name of task
