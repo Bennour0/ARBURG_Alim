@@ -5,18 +5,22 @@
 #include "my_debug.hpp"
 
 // All MAC ADD
+#define NBARBURG        2
 uint8_t arburgMacAdd [][6] = {{0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C},
                 {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0}};
-#define NBARBURG        2
+
 /*// Client 1 MAC address :
 uint8_t broadcastAddress1[] = {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C};
 // Client 2 MAC address :
 uint8_t broadcastAddress2[] = {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0};
 */
+t_c2s arburgs_data[NBARBURG];
+/*
 // Struct that will hold Client 1 receivings
 t_c2s Client1_data;
 // Struct that will hold Client 2 receivings
 t_c2s Client2_data;
+*/
 
 // Initialization fonction
 void initESPNOW();
@@ -39,7 +43,7 @@ void ShowReceivings();
 t_s2c s2c;
 
 // struct to be received by central
-t_c2s c2s;
+//t_c2s c2s;
 
 void setup()
 {
@@ -127,8 +131,11 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
+    t_c2s c2s;
     DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&c2s, incomingData, sizeof(c2s));
+    arburgs_data[c2s.ID - 1] = c2s;
+    /*memcpy(&c2s, incomingData, sizeof(c2s));
     if (c2s.ID == 1)
     {
         Client1_data.ID = c2s.ID;
@@ -142,7 +149,7 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
         Client2_data.Freq_sensor = c2s.Freq_sensor;
         Client2_data.Areq_sensor = c2s.Areq_sensor;
         Client2_data.Flevel_sensor = c2s.Flevel_sensor;
-    }
+    }*/
 }
 
 void SendReadings()
@@ -169,19 +176,19 @@ void Send_task(void *parameter)
 }
 void ShowReceivings()
 {
-    DBG_SHR(Serial.print("ID = 1 ");)
+    /*DBG_SHR(Serial.print("ID = 1 ");)
     DBG_SHR(Serial.print(" Freq : ");)
-    DBG_SHR(Serial.print(Client1_data.Freq_sensor);)
+    //DBG_SHR(Serial.print(Client1_data.Freq_sensor);)
     DBG_SHR(Serial.print(" Areq : ");)
-    DBG_SHR(Serial.print(Client1_data.Areq_sensor);)
+    //DBG_SHR(Serial.print(Client1_data.Areq_sensor);)
     DBG_SHR(Serial.print(" Flevel : ");)
     DBG_SHR(Serial.print(Client1_data.Flevel_sensor);)
     DBG_SHR(Serial.print(" || ");)
     DBG_SHR(Serial.print("ID = 2 ");)
     DBG_SHR(Serial.print(" Freq : ");)
-    DBG_SHR(Serial.print(Client2_data.Freq_sensor);)
+    //DBG_SHR(Serial.print(Client2_data.Freq_sensor);)
     DBG_SHR(Serial.print(" Areq : ");)
     DBG_SHR(Serial.print(Client2_data.Areq_sensor);)
     DBG_SHR( Serial.print(" Flevel : ");)
-    DBG_SHR(Serial.print(Client2_data.Flevel_sensor);)
+    DBG_SHR(Serial.print(Client2_data.Flevel_sensor);)*/
 }
