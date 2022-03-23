@@ -44,6 +44,9 @@ void setup()
 {
     Serial.begin(115200);
     initESPNOW();
+    pinMode(FEEDMAXREQ, INPUT);
+    pinMode(ARBURGREQ, INPUT);
+    pinMode(FEEDMAXLVL, INPUT);
 }
 void loop()
 {
