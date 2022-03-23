@@ -22,6 +22,7 @@ t_c2s Client1_data;
 t_c2s Client2_data;
 */
 
+#define SENSORSTATE(bState) (bState)? "Activated" : "Not Activated"
 // Initialization fonction
 void initESPNOW();
 
@@ -176,8 +177,15 @@ void Send_task(void *parameter)
 }
 void ShowReceivings()
 {
-    /*DBG_SHR(Serial.print("ID = 1 ");)
-    DBG_SHR(Serial.print(" Freq : ");)
+    DBG_SHR(Serial.print("Inside ShowReceivings\n");)
+
+    for(int i=0; i<NBARBURG; i++){
+        Serial.printf("%d --> [FEEDMAX %s; ARBURG %s; LEVELFEEDMAX %s]\n",
+        SENSORSTATE(arburgs_data[i].Areq_sensor),
+        SENSORSTATE(arburgs_data[i].Freq_sensor),
+        SENSORSTATE(arburgs_data[i].Flevel_sensor));
+    }
+    /*DBG_SHR(Serial.print(" Freq : ");)
     //DBG_SHR(Serial.print(Client1_data.Freq_sensor);)
     DBG_SHR(Serial.print(" Areq : ");)
     //DBG_SHR(Serial.print(Client1_data.Areq_sensor);)
