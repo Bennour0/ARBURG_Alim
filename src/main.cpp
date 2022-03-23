@@ -12,6 +12,9 @@ t_s2c s2c;
 // struct to recieve from the central
 t_c2s c2s;
 
+// struct that holds serveur/central receivings
+t_s2c Central_data;
+
 // Sensors pins assignments :
 #define FEEDMAXREQ 25 // FEEDMAX Requirement sensor pin intialisation
 #define ARBURGREQ 26  // ARBURG Requirement sensor pin intialisation
@@ -102,14 +105,9 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     DBG_ODR(Serial.print("Inside OnDataRecv\n");)
-    /*DBG_ODR(char macStr[18];)
-    DBG_ODR(Serial.print("Packet received from: ");)
-    DBG_ODR(snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-                     mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);)
-    DBG_ODR(Serial.println(macStr);)
-    memcpy(&Rec_Readings, incomingData, sizeof(Rec_Readings));
-    holding_Data.id = Rec_Readings.id;
-    holding_Data.stat_Cen = Rec_Readings.stat_Cen;*/
+    memcpy(&s2c, incomingData, sizeof(s2c));
+    Central_data.ID = s2c.ID;
+    Central_data.start = s2c.start;
 }
 
 void SendReadings()
