@@ -9,13 +9,10 @@
 // Uncommit this to debug SendReadings
 // #define SENDREADINGS
 // Uncommit this to debug updateDisplay
-//#define UPDATEDISPLAY
-// Uncommit this to chose board ID 1
-// #define BOARDID1
+// #define UPDATEDISPLAY
 // Debug session
-// Uncommit this to chose board ID 2
 #define BOARDID2
-//Debug session
+// Debug session
 #ifdef DEBUG
 #define D(x) x
 #else
@@ -40,14 +37,4 @@
 #define DBG_UD(x) D(x)
 #else
 #define DBG_UD(x)
-#endif
-#ifdef BOARDID1
-#define DBG_BID1(x) D(x)
-#else
-#define DBG_BID1(x)
-#endif
-#ifdef BOARDID2
-#define DBG_BID2(x) D(x)
-#else
-#define DBG_BID2(x)
 #endif
