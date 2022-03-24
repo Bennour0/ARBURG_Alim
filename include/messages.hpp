@@ -1,13 +1,3 @@
-/*client/serveur
-	Sending :
-		*ID
-		*Freq sensor
-		*Areq sensor
-		*Flevel sensor
-	Receiving :
-		*ID
-		*start*/
-
 #pragma once
 
 typedef struct s2c
