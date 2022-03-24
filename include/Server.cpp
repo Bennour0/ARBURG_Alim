@@ -1,5 +1,9 @@
 #include "Server.hpp"
 
+/**
+ * @brief Initialization function
+ *
+ */
 void initESPNOW()
 {
     // Set device as a Wi-Fi Station
@@ -30,6 +34,7 @@ void initESPNOW()
             return;
         }
     }
+    // Creating task for RTOS
     xTaskCreatePinnedToCore(
         Send_task,   // Function to be called
         "Send_task", // Name of task
@@ -40,6 +45,12 @@ void initESPNOW()
         CONFIG_ARDUINO_RUNNING_CORE);
 }
 
+/**
+ * @brief Callback when data is sent function
+ *
+ * @param mac_addr MAC ADD
+ * @param status STATUS
+ */
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
     DBG_ODS(Serial.print("Inside OnDataSent\n");)
@@ -55,6 +66,13 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
     }*/
 }
 
+/**
+ * @brief Callback when data is received function
+ *
+ * @param mac MAC ADD
+ * @param incomingData RECEIVING DATA
+ * @param len  RECEIVING DATA LENGTH
+ */
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     t_c2s c2s;
@@ -63,6 +81,10 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
     arburgs_data[c2s.ID - 1] = c2s;
 }
 
+/**
+ * @brief Send readings function
+ *
+ */
 void SendReadings()
 {
     // Send message via ESP-NOW
@@ -77,6 +99,11 @@ void SendReadings()
     }
 }
 
+/**
+ * @brief Send readings task for RTOS
+ *
+ * @param parameter Parameter for RTOS
+ */
 void Send_task(void *parameter)
 {
     while (1)
@@ -85,6 +112,11 @@ void Send_task(void *parameter)
         delay(1000);
     }
 }
+
+/**
+ * @brief Show receiving function
+ *
+ */
 void ShowReceivings()
 {
     DBG_SHR(Serial.print("Inside ShowReceivings\n");)

@@ -16,19 +16,44 @@ t_c2s arburgs_data[NBARBURG];
 // stuct to be sent by central
 t_s2c s2c;
 
-// Initialization fonction
+/**
+ * @brief Initialization function
+ *
+ */
 void initESPNOW();
 
-// Callback when data is sent fonction
+/**
+ * @brief Callback when data is sent function
+ *
+ * @param mac_addr MAC ADD
+ * @param status STATUS
+ */
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 
-// Callback when data is received fonction
+/**
+ * @brief Callback when data is received function
+ *
+ * @param mac MAC ADD
+ * @param incomingData RECEIVING DATA
+ * @param len  RECEIVING DATA LENGTH
+ */
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
-// Send readings fonction
+/**
+ * @brief Send readings function
+ *
+ */
 void SendReadings();
 
-// Send readings task for RTOS
+/**
+ * @brief Send readings task for RTOS
+ *
+ * @param parameter Parameter for RTOS
+ */
 void Send_task(void *parameter);
 
+/**
+ * @brief Show receiving function
+ *
+ */
 void ShowReceivings();
