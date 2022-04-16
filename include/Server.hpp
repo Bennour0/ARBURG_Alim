@@ -1,59 +1,42 @@
 #include <Arduino.h>
-#include <WiFi.h>
+#ifdef ESP32
+  #include <WiFi.h>
+#else
+  #include <ESP8266WiFi.h>
+#endif
 #include <esp_now.h>
 #include "messages.hpp"
 #include "my_debug.hpp"
+#define ENCADRANT
 
 // All MAC ADD
+#ifdef ENCADRANT
+  #define ADDMAC1     {0xC4, 0x4F, 0x33, 0x7C, 0x56, 0x41}
+  #define ADDMAC2     {0x7C, 0x9E, 0xBD, 0x07, 0xDF, 0xCC}
+  #define ADDMAC3     {0xAC, 0x67, 0xB2, 0x29, 0xAF, 0x38}
+#else
+  #define ADDMAC1     {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C}
+  #define ADDMAC2     {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0}
+#endif
 #define NBARBURG 2
-uint8_t arburgMacAdd[][6] = {{0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C},
-                             {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0}};
 
-t_c2s arburgs_data[NBARBURG];
+class ServerP{
+public:
+  void printMacAdd();
+  void startESPNOW();
+  void broadcast();
+  void send2client(const uint8_t *mac, t_s2c s2c);
+private:
+  static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
+  static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+  uint8_t arburgMacAdd[NBARBURG][6] = {ADDMAC1, ADDMAC2};
+  static t_c2s arburgs_data[NBARBURG];
+};
+//uint8_t arburgMacAdd[][6] = {ADDMAC1, ADDMAC2};
 
-#define SENSORSTATE(bState) (bState) ? "Activated" : "Not Activated"
+//t_c2s arburgs_data[NBARBURG];
+
+#define SENSORSTATE(bState) ((bState) ? "Activated" : "Not Activated")
 
 // stuct to be sent by central
-t_s2c s2c;
-
-/**
- * @brief Initialization function
- *
- */
-void initESPNOW();
-
-/**
- * @brief Callback when data is sent function
- *
- * @param mac_addr MAC ADD
- * @param status STATUS
- */
-void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
-
-/**
- * @brief Callback when data is received function
- *
- * @param mac MAC ADD
- * @param incomingData RECEIVING DATA
- * @param len  RECEIVING DATA LENGTH
- */
-void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
-
-/**
- * @brief Send readings function
- *
- */
-void SendReadings();
-
-/**
- * @brief Send readings task for RTOS
- *
- * @param parameter Parameter for RTOS
- */
-void Send_task(void *parameter);
-
-/**
- * @brief Show receiving function
- *
- */
-void ShowReceivings();
+//t_s2c s2c;
