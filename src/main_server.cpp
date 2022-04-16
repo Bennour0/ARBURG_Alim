@@ -1,6 +1,6 @@
 #include "Server.cpp"
 
-void setup()
+void setup() 
 {
     Serial.begin(115200);
     initESPNOW();
