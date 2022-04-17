@@ -45,11 +45,11 @@ void ServerP::startESPNOW(){
     D_SESPNOW(Serial.println("End ServerP::startESPNOW()");)
 }
 void ServerP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status){
-    D_ODS(Serial.println("End ServerP::OnDataSent()");)
+    D_ODS(Serial.println("nStart ServerP::OnDataSent()");)
     D_ODS(Serial.println("End ServerP::OnDataSent()");)
 }
 void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
-    D_ODR(Serial.println("End ServerP::OnDataRecv()");)
+    D_ODR(Serial.println("nStart ServerP::OnDataRecv()");)
     t_c2s c2s;
     //DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&c2s, incomingData, sizeof(c2s));
@@ -58,12 +58,12 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 }
 
 void ServerP::broadcast(){
-    D_BRCAST(Serial.println("End ServerP::broadcast()");)
+    D_BRCAST(Serial.println("nStart ServerP::broadcast()");)
     D_BRCAST(Serial.println("End ServerP::broadcast()");)
     // esp_err_t result = esp_now_send(0, (uint8_t *)&s2c, sizeof(s2c));
 }
 void ServerP::send2client(const uint8_t *mac, t_s2c s2c){
-    D_S2C(Serial.println("End ServerP::send2client()");)
+    D_S2C(Serial.println("nStart ServerP::send2client()");)
     esp_err_t result = esp_now_send(mac, (uint8_t *)&s2c, sizeof(s2c));
     D_S2C(Serial.println("End ServerP::send2client()");)
 }
