@@ -27,7 +27,7 @@ void ServerP::startESPNOW(){
     esp_now_register_recv_cb(ServerP::OnDataRecv);
     D_SESPNOW(Serial.println("OnDataRecv registred");)
 
-    esp_now_peer_info_t peerInfo;
+    esp_now_peer_info_t peerInfo = {};
 
     // Registering peers
     for (int i = 0; i < NBARBURG; i++)
@@ -53,7 +53,7 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     t_c2s c2s;
     //DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&c2s, incomingData, sizeof(c2s));
-    arburgs_data[c2s.ID - 1] = c2s;
+    //arburgs_data[c2s.ID - 1] = c2s;
     D_ODR(Serial.println("End ServerP::OnDataRecv()");)
 }
 
