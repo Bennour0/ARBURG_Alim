@@ -34,6 +34,5 @@ private:
   uint8_t vlv_feedmax;
   uint8_t vlv_drymax;
   static t_s2c s2c;
-  esp_now_send_cb_t pOnSent = &OnSent;
 };
 
