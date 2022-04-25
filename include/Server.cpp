@@ -1,8 +1,13 @@
 #include "Server.hpp"
 
-void ServerP::printMacAdd(const uint8_t *serverMacAdd){
+/**
+ * @brief Prints a MAC add
+ * 
+ * @param mac const uint8_t *. A pointer to the mac address to be prented
+ */
+void ServerP::printMacAdd(const uint8_t *mac){
     for(int i=0; i<6; i++){
-        Serial.printf("%X%c", serverMacAdd[i], ((i==5)?' ':':'));
+        Serial.printf("%X%c", mac[i], ((i==5)?' ':':'));
     }
 }
 
@@ -65,7 +70,14 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     //DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&c2s, incomingData, sizeof(c2s));
     //arburgs_data[c2s.ID - 1] = c2s;
+    printClientInfo(&c2s);
     D_ODR(Serial.println("End ServerP::OnDataRecv()");)
+}
+
+void ServerP::printClientInfo(const t_c2s *c2s){
+    #define PRINT_STATUS(x) ((x)?"Up":"Down")
+    Serial.printf("%d[%5s, %5s, %5s]", c2s->ID, PRINT_STATUS(c2s->Freq_sensor),
+    PRINT_STATUS(c2s->Flevel_sensor),PRINT_STATUS(c2s->Areq_sensor));
 }
 
 void ServerP::broadcast(){

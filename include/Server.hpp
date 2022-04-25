@@ -22,7 +22,6 @@
 
 class ServerP{
 public:
-  static void printMacAdd(const uint8_t *serverMacAdd);
   void printLocalMacAdd(); 
   void startESPNOW();
   void broadcast();
@@ -30,6 +29,8 @@ public:
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+  static void printMacAdd(const uint8_t * mac);
+  static void printClientInfo(const t_c2s *c2s);
   uint8_t arburgMacAdd[NBARBURG][6] = {ADDMAC1, ADDMAC2};
   static t_c2s arburgs_data[NBARBURG];
 };
