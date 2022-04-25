@@ -20,10 +20,11 @@ public:
   void printMacAdd();
   void startESPNOW();
   void send2server(t_c2s c2s);
-  void printServer(const uint8_t *serverMacAdd);
+  void printServer();
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+  void printMacAdd(const uint8_t *mac);
   uint8_t id;
   uint8_t serverMacAdd[6] = ADDMAC;
   uint8_t sen_feedmax;

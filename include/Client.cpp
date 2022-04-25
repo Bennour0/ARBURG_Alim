@@ -80,8 +80,12 @@ void ClientP::send2server(t_c2s c2s){
     D_C2S(Serial.println("End ClientP::send2server()");)
 }
 
-void ClientP::printServer(const uint8_t *serverMacAdd){
+void ClientP::printMacAdd(const uint8_t *mac){
     for(int i=0; i<6; i++){
-        Serial.printf("%X%c", serverMacAdd[i], ((i==5)?' ':':'));
+        Serial.printf("%X%c", mac[i], ((i==5)?' ':':'));
     }
+}
+
+void ClientP::printServer(){
+    printMacAdd(serverMacAdd);
 }
