@@ -5,8 +5,8 @@
 
 //#define D_PRINTMACADD
 #define D_STARTESPNOW
-//#define D_ONDATASENT
-//#define D_ONDATAREC
+#define D_ONDATASENT
+#define D_ONDATAREC
 
 #ifdef MY_DEBUG
   #define D(x) x

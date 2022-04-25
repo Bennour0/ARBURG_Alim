@@ -22,7 +22,8 @@
 
 class ServerP{
 public:
-  void printMacAdd(); 
+  static void printMacAdd(const uint8_t *serverMacAdd);
+  void printLocalMacAdd(); 
   void startESPNOW();
   void broadcast();
   void send2client(const uint8_t *mac, t_s2c s2c);
@@ -37,6 +38,9 @@ private:
 //t_c2s arburgs_data[NBARBURG];
 
 #define SENSORSTATE(bState) ((bState) ? "Activated" : "Not Activated")
+uint8_t arburgMacAdds[NBARBURG][6] = {ADDMAC1, ADDMAC2};
+void receiving(const uint8_t *mac, const uint8_t *incomingData, int len);
+void initESPNOW();
 
 // stuct to be sent by central
 //t_s2c s2c;

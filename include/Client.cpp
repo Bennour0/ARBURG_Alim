@@ -34,6 +34,7 @@ void ClientP::startESPNOW(){
     // get the status of Trasnmitted packet
     //esp_now_register_send_cb(ServerP::OnDataSent);
     esp_now_register_send_cb(ClientP::OnDataSent);
+    // esp_now_register_send_cb(ClientP::pOnSent);
     D_SESPNOW(Serial.println("OnDataSent registred");)
     // Register for a callback function that will be called when data is received
     esp_now_register_recv_cb(ClientP::OnDataRecv);
@@ -55,11 +56,15 @@ void ClientP::startESPNOW(){
 }
 
 void ClientP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status){
-    D_ODS(Serial.println("End ClientP::OnDataSent()");)
+    D_ODS(Serial.println("Start ClientP::OnDataSent()");)
     D_ODS(Serial.println("End ClientP::OnDataSent()");)
 }
+extern "C" {void OnSent(const uint8_t *mac_addr, esp_now_send_status_t status){
+    D_ODS(Serial.println("Start OnSent()");)
+    D_ODS(Serial.println("End OnSent()");)
+}}
 void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
-    D_ODR(Serial.println("End ClientP::OnDataRecv()");)
+    D_ODR(Serial.println("Start ClientP::OnDataRecv()");)
     t_s2c s2c_in;
     //DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&s2c_in, incomingData, sizeof(s2c_in));
@@ -68,8 +73,15 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 }
 
 void ClientP::send2server(t_c2s c2s){
-    D_C2S(Serial.println("End ClientP::send2server()");)
+    D_C2S(Serial.println("Start ClientP::send2server()");)
     esp_err_t result = esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
-    D_C2S(Serial.printf("Sending to server %s\n", ((result)?"succeed":"fail"));)
+    Serial.printf("Sending to server %s\n",
+                ((result==ESP_NOW_SEND_FAIL)?"fail":"succeed"));
     D_C2S(Serial.println("End ClientP::send2server()");)
+}
+
+void ClientP::printServer(const uint8_t *serverMacAdd){
+    for(int i=0; i<6; i++){
+        Serial.printf("%X%c", serverMacAdd[i], ((i==5)?' ':':'));
+    }
 }

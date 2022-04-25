@@ -12,6 +12,7 @@
   #define ADDMAC     {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C}
 #endif
 
+extern "C" {void OnSent(const uint8_t *mac_addr, esp_now_send_status_t status);}
 class ClientP{
 public:
   ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
@@ -19,6 +20,7 @@ public:
   void printMacAdd();
   void startESPNOW();
   void send2server(t_c2s c2s);
+  void printServer(const uint8_t *serverMacAdd);
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
@@ -31,4 +33,6 @@ private:
   uint8_t vlv_feedmax;
   uint8_t vlv_drymax;
   static t_s2c s2c;
+  esp_now_send_cb_t pOnSent = &OnSent;
 };
+
