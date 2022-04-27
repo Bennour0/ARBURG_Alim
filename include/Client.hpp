@@ -12,7 +12,6 @@
   #define ADDMAC     {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C}
 #endif
 
-extern "C" {void OnSent(const uint8_t *mac_addr, esp_now_send_status_t status);}
 class ClientP{
 public:
   ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,

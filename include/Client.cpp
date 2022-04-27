@@ -59,10 +59,7 @@ void ClientP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status){
     D_ODS(Serial.println("Start ClientP::OnDataSent()");)
     D_ODS(Serial.println("End ClientP::OnDataSent()");)
 }
-extern "C" {void OnSent(const uint8_t *mac_addr, esp_now_send_status_t status){
-    D_ODS(Serial.println("Start OnSent()");)
-    D_ODS(Serial.println("End OnSent()");)
-}}
+
 void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
     D_ODR(Serial.println("Start ClientP::OnDataRecv()");)
     t_s2c s2c_in;
