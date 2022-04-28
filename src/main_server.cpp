@@ -1,6 +1,7 @@
 #include "Server.cpp"
 
 ServerP s;
+t_s2c s2c;
 void setup() 
 {
     Serial.begin(115200);
@@ -10,4 +11,6 @@ void setup()
 }
 void loop()
 {
+    s.broadcast(s2c);
+    delay(2000);
 }

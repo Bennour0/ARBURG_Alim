@@ -80,8 +80,11 @@ void ServerP::printClientInfo(const t_c2s *c2s){
     PRINT_STATUS(c2s->Flevel_sensor),PRINT_STATUS(c2s->Areq_sensor));
 }
 
-void ServerP::broadcast(){
+void ServerP::broadcast(t_s2c s2c){
     D_BRCAST(Serial.println("Start ServerP::broadcast()");)
+    for(int i=0; i<NBARBURG; i++){
+        send2client(arburgMacAdd[i], s2c);
+    }
     D_BRCAST(Serial.println("End ServerP::broadcast()");)
     // esp_err_t result = esp_now_send(0, (uint8_t *)&s2c, sizeof(s2c));
 }

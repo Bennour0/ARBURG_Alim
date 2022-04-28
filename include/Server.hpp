@@ -24,7 +24,7 @@ class ServerP{
 public:
   void printLocalMacAdd(); 
   void startESPNOW();
-  void broadcast();
+  void broadcast(t_s2c s2c);
   void send2client(const uint8_t *mac, t_s2c s2c);
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
