@@ -1,8 +1,7 @@
-idEvent | sin | sout | idC | cin | cout | F | A | FL | S | time | len |
+idEvent | sin | sout | cin | cout | F | A | FL | S | time | len | @MAC
 idEvent : identificateur d'evenements.
 sin : server in, compteur de messages reçus par le serveur.
 sout : server out, compteur de messages envoyés par le serveur.
-idC : id client, identifiant du client.
 cin : client in, compteur de messages reçus par le client.
 cout : client out, compteur	de messages envoyés par le client.
 F : Feedmax sensor status, etat du capteur de l'alimentateur Feedmax.
@@ -11,3 +10,4 @@ FL : Feedmax level sensor status, etat du capteur de niveau du l'alimentateur Fe
 S : Job start, indique si le client se prépare pour le chargement ou non.
 time : la date et l'heure de l'evenement.
 len : la taille de la file d'attente.
+@MAC : l'adresse MAC du client
