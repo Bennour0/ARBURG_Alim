@@ -1,7 +1,7 @@
 // To ensure that the file will be included only once
 #pragma once
 
-#define MY_DEBUG
+// #define MY_DEBUG
 
 //#define D_PRINTMACADD
 #define D_STARTESPNOW
