@@ -18,7 +18,7 @@ public:
           uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin);
   void printMacAdd();
   void startESPNOW();
-  void send2server(t_c2s c2s);
+  void send2server();
   void printServer();
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
@@ -33,5 +33,7 @@ private:
   uint8_t vlv_feedmax;
   uint8_t vlv_drymax;
   static t_s2c s2c;
+  static t_c2s c2s;
+  /*static t_inout inout;*/
 };
 

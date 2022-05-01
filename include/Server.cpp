@@ -1,5 +1,7 @@
 #include "Server.hpp"
 
+t_inout ServerP::inout;
+
 /**
  * @brief Prints a MAC add
  * 
@@ -58,6 +60,11 @@ void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status){
     D_ODS(Serial.println("Start ServerP::OnDataSent()");)
     D_ODS(Serial.print("Sending to: ");)
     D_ODS(printMacAdd(mac);)
+    inout.out++;
+    Serial.printf("\n%4d | %4d | %4d | %4d | %4d | %4d | %4d | %4d | ",
+    inout.in+inout.out, inout.in, inout.out, -1,
+    -1, -1, -1, -1);
+    printMacAdd(mac);
     D_ODS(Serial.println("\nEnd ServerP::OnDataSent()");)
 }
 void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
@@ -70,7 +77,12 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     //DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&c2s, incomingData, sizeof(c2s));
     //arburgs_data[c2s.ID - 1] = c2s;
-    printClientInfo(&c2s);
+    // printClientInfo(&c2s);
+    inout.in++;
+    Serial.printf("\n%4d | %4d | %4d | %4d | %4d | %4d | %4d | %4d | ",
+    inout.in+inout.out, inout.in, inout.out, c2s.inout.in,
+    c2s.inout.out, c2s.Freq_sensor, c2s.Areq_sensor, c2s.Flevel_sensor);
+    printMacAdd(mac);
     D_ODR(Serial.println("End ServerP::OnDataRecv()");)
 }
 
@@ -82,7 +94,7 @@ void ServerP::printClientInfo(const t_c2s *c2s){
 
 void ServerP::broadcast(t_s2c s2c){
     D_BRCAST(Serial.println("Start ServerP::broadcast()");)
-    for(int i=0; i<NBARBURG; i++){
+    for(int i=0; i<1; i++){
         send2client(arburgMacAdd[i], s2c);
     }
     D_BRCAST(Serial.println("End ServerP::broadcast()");)

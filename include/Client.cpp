@@ -1,15 +1,23 @@
 #include "Client.hpp"
 #include "my_debug.hpp"
 
+t_c2s ClientP::c2s;
+
 ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
           uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin){
-    this->id = id;
+    // this->id = id;
+    c2s.ID = id;
+    c2s.inout.out = 0;
+    c2s.inout.in = 0;
     sen_feedmax = sen_feedmax_pin;
     sen_arburg = sen_arburg_pin;
     sen_feedmax_lvl = sen_feedmax_lvl_pin;
     vlv_charger = vlv_charger_pin;
     vlv_feedmax = vlv_feedmax_pin;
     vlv_drymax = vlv_drymax_pin;
+    c2s.Freq_sensor = digitalRead(sen_feedmax);
+    c2s.Areq_sensor = digitalRead(sen_arburg);
+    c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
 }
 
 void ClientP::printMacAdd(){
@@ -57,6 +65,7 @@ void ClientP::startESPNOW(){
 
 void ClientP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status){
     D_ODS(Serial.println("Start ClientP::OnDataSent()");)
+    c2s.inout.out++;
     D_ODS(Serial.println("End ClientP::OnDataSent()");)
 }
 
@@ -66,14 +75,16 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     //DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&s2c_in, incomingData, sizeof(s2c_in));
     //s2c = s2c_in;
+    c2s.inout.in++;
     D_ODR(Serial.println("End ClientP::OnDataRecv()");)
 }
 
-void ClientP::send2server(t_c2s c2s){
+void ClientP::send2server(){
     D_C2S(Serial.println("Start ClientP::send2server()");)
     esp_err_t result = esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
-    Serial.printf("Sending to server %s\n",
-                ((result==ESP_NOW_SEND_FAIL)?"fail":"succeed"));
+    Serial.printf("Sending to server %s (%4d, %4d)\n",
+                ((result==ESP_NOW_SEND_FAIL)?"fail":"succeed"),
+                c2s.inout.in, c2s.inout.out);
     D_C2S(Serial.println("End ClientP::send2server()");)
 }
 
