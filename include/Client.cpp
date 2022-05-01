@@ -15,9 +15,6 @@ ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, ui
     vlv_charger = vlv_charger_pin;
     vlv_feedmax = vlv_feedmax_pin;
     vlv_drymax = vlv_drymax_pin;
-    c2s.Freq_sensor = digitalRead(sen_feedmax);
-    c2s.Areq_sensor = digitalRead(sen_arburg);
-    c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
 }
 
 void ClientP::printMacAdd(){
@@ -80,6 +77,9 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 }
 
 void ClientP::send2server(){
+    c2s.Freq_sensor = digitalRead(sen_feedmax);
+    c2s.Areq_sensor = digitalRead(sen_arburg);
+    c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
     D_C2S(Serial.println("Start ClientP::send2server()");)
     esp_err_t result = esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
     Serial.printf("Sending to server %s (%4d, %4d)\n",
