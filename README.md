@@ -2,7 +2,7 @@
 
 # ARBURGAlim
 
-Ce répertoire concerne le partie code du projet de fin d'etudes de système automatique d'alimentation en plastique de machine ARBURG 
+Ce répertoire concerne la partie code du projet de fin d'etudes de système automatique d'alimentation en plastique de machine ARBURG.
 
 
 ## EQUIPE
