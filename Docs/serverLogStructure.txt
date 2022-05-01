@@ -8,6 +8,6 @@ cout : client out, compteur	de messages envoyés par le client.
 F : Feedmax sensor status, etat du capteur de l'alimentateur Feedmax.
 A : Arburg sensor status, etat du capteur du chargeur de l'Arburg.
 FL : Feedmax level sensor status, etat du capteur de niveau du l'alimentateur Feedmax.
-S : Job status, etat de fonctionnement envoyé par le serveur vers un client.
+S : Job start, indique si le client se prépare pour le chargement ou non.
 time : la date et l'heure de l'evenement.
 len : la taille de la file d'attente.
