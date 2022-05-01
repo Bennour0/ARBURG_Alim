@@ -18,6 +18,6 @@ void setup()
 }
 void loop()
 {
-    c.send2server(m);
+    c.send2server();
     delay(2000);
 }
