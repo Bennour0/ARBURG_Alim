@@ -42,6 +42,14 @@ private:
   static t_c2s arburgs_data[NBARBURG];
   static t_inout inout;
 };
+class Queue
+{
+public:
+  void initQ();
+  void showQ(queue<c2s> q);
+private:
+  /* data */
+};
 
 //uint8_t arburgMacAdd[][6] = {ADDMAC1, ADDMAC2};
 

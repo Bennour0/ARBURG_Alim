@@ -65,3 +65,9 @@
 #endif
 
 #endif
+
+#ifdef D_SHOWQUEUE
+  #define D_SHQ(x)  D(x)
+#else
+  #define D_SHQ(x)
+#endif

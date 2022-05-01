@@ -108,7 +108,6 @@ void ServerP::send2client(const uint8_t *mac, t_s2c s2c){
     D_S2C(Serial.println("Sending to client %s\n", ((result)?"succeed" : "failed"));)
     D_S2C(Serial.println("End ServerP::send2client()");)
 }
-
 void Queue::initQ()
 {
 }
