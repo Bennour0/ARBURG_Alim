@@ -1,4 +1,11 @@
 #include <Arduino.h>
+#include <iostream>
+#include <queue>
+#include <ESP32Time.h>
+
+ESP32Time rtc;
+using namespace std;
+
 #ifdef ESP32
   #include <WiFi.h>
 #else
@@ -7,7 +14,7 @@
 #include <esp_now.h>
 #include "messages.hpp"
 #include "my_debug.hpp"
-#define ENCADRANT
+//#define ENCADRANT
 
 // All MAC ADD
 #ifdef ENCADRANT
@@ -15,8 +22,8 @@
   #define ADDMAC2     {0x7C, 0x9E, 0xBD, 0x07, 0xDF, 0xCC}  // 2
   #define ADDMAC3     {0xC4, 0x4F, 0x33, 0x7C, 0x56, 0x41}  // 1
 #else
-  #define ADDMAC1     {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C}
-  #define ADDMAC2     {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0}
+  #define ADDMAC1     {0x84, 0xCC, 0xA8, 0x6A, 0xA1, 0xF0}
+  #define ADDMAC2     {0x84, 0xCC, 0xA8, 0x6A, 0xB9, 0x7C}
 #endif
 #define NBARBURG 2
 
@@ -34,6 +41,15 @@ private:
   uint8_t arburgMacAdd[NBARBURG][6] = {ADDMAC1, ADDMAC2};
   static t_c2s arburgs_data[NBARBURG];
   static t_inout inout;
+};
+
+class Queue
+{
+public:
+  void initQ();
+  void showQ(queue<c2s> q);
+private:
+  /* data */
 };
 //uint8_t arburgMacAdd[][6] = {ADDMAC1, ADDMAC2};
 
