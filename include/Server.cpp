@@ -65,6 +65,7 @@ void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status){
     inout.in+inout.out, inout.in, inout.out, -1,
     -1, -1, -1, -1);
     printMacAdd(mac);
+    Serial.println(rtc.getTime("| %A, %B %d %Y %H:%M:%S"));
     D_ODS(Serial.println("\nEnd ServerP::OnDataSent()");)
 }
 void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len){
@@ -83,6 +84,7 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     inout.in+inout.out, inout.in, inout.out, c2s.inout.in,
     c2s.inout.out, c2s.Freq_sensor, c2s.Areq_sensor, c2s.Flevel_sensor);
     printMacAdd(mac);
+    Serial.println(rtc.getTime("| %A, %B %d %Y %H:%M:%S"));
     D_ODR(Serial.println("End ServerP::OnDataRecv()");)
 }
 
@@ -105,4 +107,18 @@ void ServerP::send2client(const uint8_t *mac, t_s2c s2c){
     D_S2C(esp_err_t result = )esp_now_send(mac, (uint8_t *)&s2c, sizeof(s2c));
     D_S2C(Serial.println("Sending to client %s\n", ((result)?"succeed" : "failed"));)
     D_S2C(Serial.println("End ServerP::send2client()");)
+}
+
+void Queue::initQ()
+{
+}
+void Queue::showQ(queue<c2s> q)
+{
+    queue<c2s> temp = q;
+    while (!temp.empty())
+    {
+        D_SHQ(Serial.printf("%4d | %4d | %4d | %4d ",temp.front().ID,temp.front().Freq_sensor,temp.front().Areq_sensor,temp.front().Flevel_sensor);)
+        temp.pop();
+    }
+    D_SHQ(Serial.print("|");)
 }
