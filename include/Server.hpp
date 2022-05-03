@@ -45,8 +45,7 @@ private:
 class Queue
 {
 public:
-  void initQ();
-  void showQ(queue<c2s> q);
+  
 private:
   /* data */
 };
