@@ -40,6 +40,7 @@ private:
   static void printClientInfo(const t_c2s *c2s);
   uint8_t arburgMacAdd[NBARBURG][6] = {ADDMAC1, ADDMAC2};
   static t_c2s arburgs_data[NBARBURG];
+  static t_s2c s2c;
   static t_inout inout;
 };
 class Queue

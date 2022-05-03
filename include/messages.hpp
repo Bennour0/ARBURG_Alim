@@ -10,8 +10,6 @@ typedef struct s2c
 {
 	int ID = -1;
 	bool start = false;
-	// 1 for feedmax & 2 for arburg
-	int elem = -1;
 } t_s2c;
 
 typedef struct c2s

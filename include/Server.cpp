@@ -1,5 +1,6 @@
 #include "Server.hpp"
 
+t_s2c ServerP::s2c;
 t_inout ServerP::inout;
 
 /**
@@ -85,7 +86,7 @@ void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
     printMacAdd(mac);
     Serial.print(rtc.getTime("| %A, %B %d %Y %H:%M:%S"));
     Serial.printf(" | %4d", qg.size());
-    if (qg.size() >= 1)
+    if (qg.size() >= 3)
     {
 
         D_SHQ(Serial.printf("\nInside Queue");)
@@ -127,16 +128,9 @@ void ServerP::printClientInfo(const t_c2s *c2s)
 }
 void ServerP::broadcast(t_s2c s2c)
 {
-    if (qg.front().Freq_sensor == 1 && qg.front().Flevel_sensor == 0)
-    {
+    if ((qg.front().Freq_sensor == 1 || qg.front().Areq_sensor == 1) && qg.front().Flevel_sensor != 1)
+    { 
         s2c.ID = qg.front().ID;
-        s2c.elem = 1;
-        s2c.start = true;
-    }
-    else if ((qg.front().Freq_sensor == 0 && (qg.front().Flevel_sensor == 1 || qg.front().Flevel_sensor == 0)) && qg.front().Areq_sensor == 1)
-    {
-        s2c.ID = qg.front().ID;
-        s2c.elem = 2;
         s2c.start = true;
     }
     else
