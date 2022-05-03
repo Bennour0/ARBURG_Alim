@@ -97,3 +97,20 @@ void ClientP::printMacAdd(const uint8_t *mac){
 void ClientP::printServer(){
     printMacAdd(serverMacAdd);
 }
+
+void ClientP::setupPins(){
+    pinMode(sen_feedmax, INPUT);
+    // attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
+    pinMode(sen_feedmax_lvl, INPUT);
+    // attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, CHANGE);
+    pinMode(sen_arburg, INPUT);
+    // attachInterrupt(sen_arburg, INT_ARBURG, CHANGE);
+    pinMode(vlv_feedmax, OUTPUT);
+    pinMode(vlv_drymax, OUTPUT);
+    pinMode(vlv_charger, OUTPUT);/**/
+}
+
+void ClientP::begin(){
+    startESPNOW();
+    setupPins();
+}

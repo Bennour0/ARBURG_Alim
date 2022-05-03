@@ -16,11 +16,13 @@ class ClientP{
 public:
   ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
           uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin);
-  void printMacAdd();
-  void startESPNOW();
+  void begin();
   void send2server();
   void printServer();
+  void printMacAdd();
 private:
+  void startESPNOW();
+  void setupPins();
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
   void printMacAdd(const uint8_t *mac);
