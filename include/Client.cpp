@@ -2,6 +2,15 @@
 #include "my_debug.hpp"
 
 t_c2s ClientP::c2s;
+t_s2c ClientP::s2c;
+
+uint8_t ClientP::sen_feedmax;
+uint8_t ClientP::sen_arburg;
+uint8_t ClientP::sen_feedmax_lvl;
+
+uint8_t ClientP::vlv_charger;
+uint8_t ClientP::vlv_feedmax;
+uint8_t ClientP::vlv_drymax;
 
 ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
                  uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin)
@@ -70,16 +79,89 @@ void ClientP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
     D_ODS(Serial.println("End ClientP::OnDataSent()");)
 }
 
+void ClientP::showQ(queue<int> g)
+{
+    queue<int> t = g;
+    while (!t.empty())
+    {
+        D_SHQ(Serial.printf("| %4d |\n", t.front());)
+        t.pop();
+    }
+}
+
+queue<int> qg;
+bool tempc1;
+bool tempc2;
+void ClientP::runClient()
+{    
+    if (s2c.ID == c2s.ID)
+    {
+        if ((digitalRead(sen_feedmax) == HIGH && tempc1 != 1) && digitalRead(sen_feedmax_lvl) == 0)
+        {
+            tempc1 = 1;
+            qg.push(10);
+        }
+        if (digitalRead(sen_arburg) == HIGH && tempc2 != 1 && (digitalRead(sen_feedmax_lvl) == 0 || digitalRead(sen_feedmax_lvl) == 1))
+        {
+            tempc2 = 1;
+            qg.push(20);
+        }
+        if (digitalRead(sen_feedmax_lvl) == 1 && qg.front() == 10)
+        {
+            qg.pop();
+        }
+        if (qg.size() >= 1)
+        {
+            showQ(qg);
+        }
+        if(qg.front()==10)
+        {
+            digitalWrite(vlv_feedmax,HIGH);
+            digitalWrite(vlv_drymax,LOW);
+            digitalWrite(vlv_charger,LOW);
+            delay(5000);
+            digitalWrite(vlv_feedmax,LOW);
+            digitalWrite(vlv_drymax,LOW);
+            digitalWrite(vlv_charger,LOW);
+            qg.pop();
+        }
+        if(qg.front()==20)
+        {
+            digitalWrite(vlv_feedmax,LOW);
+            digitalWrite(vlv_drymax,HIGH);
+            digitalWrite(vlv_charger,HIGH);
+            delay(5000);
+            digitalWrite(vlv_feedmax,LOW);
+            digitalWrite(vlv_drymax,LOW);
+            digitalWrite(vlv_charger,LOW);
+            qg.pop();
+        }
+    }
+    else
+    {
+        digitalWrite(vlv_feedmax,LOW);
+        digitalWrite(vlv_drymax,LOW);
+        digitalWrite(vlv_charger,LOW);
+        tempc1 = 0;
+        tempc2 = 0;
+        for (int i = 0; i <= (qg.size()); i++)
+        {
+            qg.pop();
+        }
+    }
+}
+
 void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     D_ODR(Serial.println("Start ClientP::OnDataRecv()");)
     t_s2c s2c_in;
     D_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&s2c_in, incomingData, sizeof(s2c_in));
-    //s2c = s2c_in;
-    Serial.printf("%4d | %4d | %4d\n",s2c_in.ID,s2c_in.start,s2c_in.elem);
+    s2c = s2c_in;
+    Serial.printf("%4d | %4d\n", s2c_in.ID, s2c_in.start);
     c2s.inout.in++;
     D_ODR(Serial.println("End ClientP::OnDataRecv()");)
+    runClient();
 }
 
 bool tempFr;
@@ -90,19 +172,17 @@ void ClientP::send2server()
     c2s.Freq_sensor = digitalRead(sen_feedmax);
     c2s.Areq_sensor = digitalRead(sen_arburg);
     c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
-    //D_C2S(Serial.println("Start ClientP::send2server()");)
-    if((c2s.Freq_sensor != tempFr && c2s.Areq_sensor == tempAr && c2s.Flevel_sensor == tempFl)
-        ||(c2s.Freq_sensor == tempFr && c2s.Areq_sensor != tempAr && c2s.Flevel_sensor == tempFl)
-        ||(c2s.Freq_sensor == tempFr && c2s.Areq_sensor == tempAr && c2s.Flevel_sensor != tempFl))
+    // D_C2S(Serial.println("Start ClientP::send2server()");)
+    if ((c2s.Freq_sensor != tempFr && c2s.Areq_sensor == tempAr && c2s.Flevel_sensor == tempFl) || (c2s.Freq_sensor == tempFr && c2s.Areq_sensor != tempAr && c2s.Flevel_sensor == tempFl) || (c2s.Freq_sensor == tempFr && c2s.Areq_sensor == tempAr && c2s.Flevel_sensor != tempFl))
     {
         esp_err_t result = esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
         tempFr = c2s.Freq_sensor;
         tempAr = c2s.Areq_sensor;
         tempFl = c2s.Flevel_sensor;
-    Serial.printf("Sending to server %s (%4d, %4d)\n",
-                  ((result == ESP_NOW_SEND_FAIL) ? "fail" : "succeed"),
-                  c2s.inout.in, c2s.inout.out);
-    //D_C2S(Serial.println("End ClientP::send2server()");)
+        Serial.printf("Sending to server %s (%4d, %4d)\n",
+                      ((result == ESP_NOW_SEND_FAIL) ? "fail" : "succeed"),
+                      c2s.inout.in, c2s.inout.out);
+        // D_C2S(Serial.println("End ClientP::send2server()");)
     }
 }
 

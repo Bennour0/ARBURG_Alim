@@ -1,7 +1,10 @@
 #include <Arduino.h>
 #include <WiFi.h> 
 #include <esp_now.h>
+#include <queue>
 #include "messages.hpp"
+
+using namespace std;
 
 //#define ENCADRANT
 
@@ -20,18 +23,20 @@ public:
   void startESPNOW();
   void send2server();
   void printServer();
+  static void showQ(queue<int> g);
+  static void runClient();
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
   void printMacAdd(const uint8_t *mac);
   uint8_t id;
   uint8_t serverMacAdd[6] = ADDMAC;
-  uint8_t sen_feedmax;
-  uint8_t sen_arburg;
-  uint8_t sen_feedmax_lvl;
-  uint8_t vlv_charger;
-  uint8_t vlv_feedmax;
-  uint8_t vlv_drymax;
+  static uint8_t sen_feedmax;
+  static uint8_t sen_arburg;
+  static uint8_t sen_feedmax_lvl;
+  static uint8_t vlv_charger;
+  static uint8_t vlv_feedmax;
+  static uint8_t vlv_drymax;
   static t_s2c s2c;
   static t_c2s c2s;
   /*static t_inout inout;*/

@@ -61,9 +61,8 @@ void ServerP::startESPNOW()
     D_SESPNOW(Serial.printf("Register %d stations\n", NBARBURG);)
     D_SESPNOW(Serial.println("End ServerP::startESPNOW()");)
 }
-Queue q;
-queue<c2s> qg;
 
+queue<c2s> qg;
 void showQ(queue<c2s> g)
 {
     queue<c2s> temp = g;
@@ -86,7 +85,7 @@ void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
     printMacAdd(mac);
     Serial.print(rtc.getTime("| %A, %B %d %Y %H:%M:%S"));
     Serial.printf(" | %4d", qg.size());
-    if (qg.size() >= 3)
+    if (qg.size() >= 1)
     {
 
         D_SHQ(Serial.printf("\nInside Queue");)
@@ -128,17 +127,17 @@ void ServerP::printClientInfo(const t_c2s *c2s)
 }
 void ServerP::broadcast(t_s2c s2c)
 {
-    if ((qg.front().Freq_sensor == 1 || qg.front().Areq_sensor == 1) && qg.front().Flevel_sensor != 1)
+    if (qg.front().Freq_sensor == 1 || qg.front().Areq_sensor == 1)
     { 
         s2c.ID = qg.front().ID;
         s2c.start = true;
     }
-    else
+    else if (qg.front().Freq_sensor == 0 && qg.front().Areq_sensor == 0 )
     {
         s2c.start = false;
     }
     D_BRCAST(Serial.println("Start ServerP::broadcast()");)
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i <=1; i++)
     {
         send2client(arburgMacAdd[i], s2c);
     }

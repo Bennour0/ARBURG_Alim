@@ -25,6 +25,5 @@ void setup()
 void loop()
 {
     c.send2server();
-    c.runClient();
     delay(2000);
 }
