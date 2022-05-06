@@ -1,5 +1,6 @@
 #include "Server.hpp"
 
+t_c2s ServerP::c2s;
 t_s2c ServerP::s2c;
 t_inout ServerP::inout;
 
@@ -62,10 +63,9 @@ void ServerP::startESPNOW()
     D_SESPNOW(Serial.println("End ServerP::startESPNOW()");)
 }
 
-queue<c2s> qg;
-void showQ(queue<c2s> g)
+void ServerP::showQ(queue<t_c2s> g)
 {
-    queue<c2s> temp = g;
+    queue<t_c2s> temp = g;
     while (!temp.empty())
     {
         D_SHQ(Serial.printf("\n%4d | %4d | %4d | %4d |", temp.front().ID, temp.front().Freq_sensor, temp.front().Areq_sensor, temp.front().Flevel_sensor);)
@@ -73,6 +73,7 @@ void showQ(queue<c2s> g)
     }
     D_SHQ(Serial.print("|");)
 }
+queue<t_c2s> qg;
 void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
 {
     D_ODS(Serial.println("Start ServerP::OnDataSent()");)
@@ -87,13 +88,10 @@ void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
     Serial.printf(" | %4d", qg.size());
     if (qg.size() >= 1)
     {
-
         D_SHQ(Serial.printf("\nInside Queue");)
-        showQ(qg);
+        D_SHQ(showQ(qg);)
         D_SHQ(Serial.printf("\nEnd Queue");)
-        qg.pop();
     }
-
     D_ODS(Serial.println("\nEnd ServerP::OnDataSent()");)
 }
 void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
@@ -102,12 +100,14 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     D_ODR(Serial.print("Receive data from: ");)
     D_ODR(printMacAdd(mac);)
     D_ODR(Serial.println();)
-    t_c2s c2s;
     // DBG_ODR(Serial.print("Inside OnDataRecv\n");)
     memcpy(&c2s, incomingData, sizeof(c2s));
     // arburgs_data[c2s.ID - 1] = c2s;
     //  printClientInfo(&c2s);
-    qg.push(c2s);
+    if (c2s.ID != 0 && qg.front().ID != c2s.ID)
+    {
+        qg.push(c2s);
+    }
     inout.in++;
     Serial.printf("\n%4d | %4d | %4d | %4d | %4d | %4d | %4d | %4d | ",
                   inout.in + inout.out, inout.in, inout.out, c2s.inout.in,
@@ -125,19 +125,29 @@ void ServerP::printClientInfo(const t_c2s *c2s)
     Serial.printf("%d[%5s, %5s, %5s]", c2s->ID, PRINT_STATUS(c2s->Freq_sensor),
                   PRINT_STATUS(c2s->Flevel_sensor), PRINT_STATUS(c2s->Areq_sensor));
 }
-void ServerP::broadcast(t_s2c s2c)
+void ServerP::checkQ()
 {
-    if (qg.front().Freq_sensor == 1 || qg.front().Areq_sensor == 1)
-    { 
+    if ((qg.front().Freq_sensor == 1 && qg.front().Flevel_sensor == 0) || qg.front().Areq_sensor == 1)
+    {
         s2c.ID = qg.front().ID;
         s2c.start = true;
     }
-    else if (qg.front().Freq_sensor == 0 && qg.front().Areq_sensor == 0 )
+    else if (qg.front().Freq_sensor == 0 && qg.front().Areq_sensor == 0)
     {
+        s2c.ID = -1;
         s2c.start = false;
+        qg.pop();
     }
+    if (qg.front().ID == c2s.ID && c2s.qs == c2s.ID && !qg.empty())
+    {
+        qg.pop();
+    }
+}
+void ServerP::broadcast()
+{
+    checkQ();
     D_BRCAST(Serial.println("Start ServerP::broadcast()");)
-    for (int i = 0; i <=1; i++)
+    for (int i = 0; i <= 1; i++)
     {
         send2client(arburgMacAdd[i], s2c);
     }

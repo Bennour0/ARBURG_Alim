@@ -31,8 +31,10 @@ class ServerP{
 public:
   void printLocalMacAdd(); 
   void startESPNOW();
-  void broadcast(t_s2c s2c);
+  void broadcast();
   void send2client(const uint8_t *mac, t_s2c s2c);
+  void checkQ();
+  static void showQ(queue<t_c2s> g);
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
@@ -40,6 +42,7 @@ private:
   static void printClientInfo(const t_c2s *c2s);
   uint8_t arburgMacAdd[NBARBURG][6] = {ADDMAC1, ADDMAC2};
   static t_c2s arburgs_data[NBARBURG];
+  static t_c2s c2s;
   static t_s2c s2c;
   static t_inout inout;
 };
