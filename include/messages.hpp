@@ -18,5 +18,7 @@ typedef struct c2s
 	bool Freq_sensor = false;
 	bool Areq_sensor = false;
 	bool Flevel_sensor = false;
+	int qs;
 	t_inout inout;
 } t_c2s;
+
