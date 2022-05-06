@@ -1,7 +1,7 @@
 #include "Server.cpp"
 
 ServerP s;
-t_s2c s2c;
+
 void setup() 
 {
     Serial.begin(115200);
@@ -15,7 +15,7 @@ void loop()
     while
     (!qg.empty())
     {
-        s.broadcast(s2c);
+        s.broadcast();
         delay(2000);
     }
 }
