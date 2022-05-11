@@ -2,6 +2,7 @@
 #include "my_debug.hpp"
 
 t_c2s ClientP::c2s;
+uint8_t ClientP::sen_feedmax;
 
 ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
           uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin){
@@ -100,7 +101,7 @@ void ClientP::printServer(){
 
 void ClientP::setupPins(){
     pinMode(sen_feedmax, INPUT);
-    // attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
+    attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
     pinMode(sen_feedmax_lvl, INPUT);
     // attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, CHANGE);
     pinMode(sen_arburg, INPUT);
@@ -108,6 +109,12 @@ void ClientP::setupPins(){
     pinMode(vlv_feedmax, OUTPUT);
     pinMode(vlv_drymax, OUTPUT);
     pinMode(vlv_charger, OUTPUT);/**/
+}
+
+void IRAM_ATTR ClientP::INT_FEEDMAX(){
+    c2s.Freq_sensor = digitalRead(sen_feedmax);
+    D_INTF(Serial.printf("\nFeedmax sensor status changed (%s to %s)\n",
+        PRINT_STATUS(!c2s.Freq_sensor), PRINT_STATUS(c2s.Freq_sensor));)
 }
 
 void ClientP::begin(){
