@@ -64,4 +64,13 @@
   #define D_C2S(x)
 #endif
 
+#define D_INT_FEEDMAX
+#ifdef D_INT_FEEDMAX
+  #define D_INTF(x)  D(x)
+#else
+  #define D_INTF(x)
 #endif
+
+#endif
+
+#define PRINT_STATUS(x) ((x)?"Up":"Down")

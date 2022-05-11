@@ -87,7 +87,6 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 }
 
 void ServerP::printClientInfo(const t_c2s *c2s){
-    #define PRINT_STATUS(x) ((x)?"Up":"Down")
     Serial.printf("%d[%5s, %5s, %5s]", c2s->ID, PRINT_STATUS(c2s->Freq_sensor),
     PRINT_STATUS(c2s->Flevel_sensor),PRINT_STATUS(c2s->Areq_sensor));
 }
