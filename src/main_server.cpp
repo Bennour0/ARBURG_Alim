@@ -16,6 +16,6 @@ void loop()
     (!qg.empty())
     {
         s.broadcast();
-        delay(2000);
+        delay(1000);
     }
 }

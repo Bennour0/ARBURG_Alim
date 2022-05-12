@@ -104,7 +104,7 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     memcpy(&c2s, incomingData, sizeof(c2s));
     // arburgs_data[c2s.ID - 1] = c2s;
     //  printClientInfo(&c2s);
-    if (c2s.ID != 0 && qg.front().ID != c2s.ID)
+    if (c2s.ID != 0)
     {
         qg.push(c2s);
     }
@@ -138,18 +138,27 @@ void ServerP::checkQ()
         s2c.start = false;
         qg.pop();
     }
-    if (qg.front().ID == c2s.ID && c2s.qs == c2s.ID && !qg.empty())
+    if (!qg.empty())
     {
-        qg.pop();
+        if (qg.back().ID == qg.front().ID && qg.back().Freq_sensor == 0 && qg.back().Areq_sensor == 0)
+        {
+            qg.pop();
+        }
     }
 }
+t_s2c temps2c;
 void ServerP::broadcast()
 {
     checkQ();
     D_BRCAST(Serial.println("Start ServerP::broadcast()");)
-    for (int i = 0; i <= 1; i++)
+    if (temps2c.ID != s2c.ID)
     {
-        send2client(arburgMacAdd[i], s2c);
+        for (int i = 0; i <= 1; i++)
+        {
+            send2client(arburgMacAdd[i], s2c);
+            temps2c.ID = s2c.ID;
+            send2client(arburgMacAdd[i], s2c);
+        }
     }
     D_BRCAST(Serial.println("End ServerP::broadcast()");)
     // esp_err_t result = esp_now_send(0, (uint8_t *)&s2c, sizeof(s2c));

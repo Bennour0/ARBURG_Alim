@@ -2,9 +2,7 @@
 
 /*(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
           uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin)*/
-ClientP c(1, 27, 26, 25, 13, 12, 14);
-t_c2s m;
-
+ClientP c(2, 27, 26, 25, 13, 12, 14);
 void setup()
 {
     Serial.begin(115200);
@@ -25,5 +23,5 @@ void setup()
 void loop()
 {
     c.send2server();
-    delay(2000);
+    delay(1000);
 }

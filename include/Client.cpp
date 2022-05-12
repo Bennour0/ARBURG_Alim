@@ -164,7 +164,7 @@ void ClientP::getQS()
 {
     if (!qg.empty())
     {
-        c2s.qs = c2s.ID;
+        c2s.qs = qg.size();
     }
     else
     {
