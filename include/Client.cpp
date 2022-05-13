@@ -1,17 +1,21 @@
 #include "Client.hpp"
 #include "my_debug.hpp"
 
+//Client structures allocations
 t_c2s ClientP::c2s;
 t_s2c ClientP::s2c;
 
+//Pins allocations
+//Sensors
 uint8_t ClientP::sen_feedmax;
 uint8_t ClientP::sen_arburg;
 uint8_t ClientP::sen_feedmax_lvl;
-
+//Valves
 uint8_t ClientP::vlv_charger;
 uint8_t ClientP::vlv_feedmax;
 uint8_t ClientP::vlv_drymax;
 
+//Client Queue declaration
 queue<int> qg;
 
 // Local variables that holds sensors old status

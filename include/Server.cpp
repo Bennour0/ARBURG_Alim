@@ -1,11 +1,14 @@
 #include "Server.hpp"
 
+//Server structures allocations
 t_c2s ServerP::c2s;
 t_s2c ServerP::s2c;
 t_inout ServerP::inout;
 
+//Server Queue declaration
 queue<t_c2s> qg;
 
+//Structure that holds s2c old values
 t_s2c temps2c;
 
 /**
@@ -153,9 +156,9 @@ void ServerP::broadcast()
     {
         for (int i = 0; i <= 1; i++)
         {
-            send2client(arburgMacAdd[i], s2c);
+            send2client(arburgMacAdd[i], s2c); //1st attempt of sending the struct s2c struct to client
             temps2c.ID = s2c.ID;
-            send2client(arburgMacAdd[i], s2c);
+            send2client(arburgMacAdd[i], s2c); //2nd attempt of sending thats confirm sending data
         }
     }
     D_BRCAST(Serial.println("End ServerP::broadcast()");)
