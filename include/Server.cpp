@@ -4,6 +4,10 @@ t_c2s ServerP::c2s;
 t_s2c ServerP::s2c;
 t_inout ServerP::inout;
 
+queue<t_c2s> qg;
+
+t_s2c temps2c;
+
 /**
  * @brief Prints a MAC add
  *
@@ -16,14 +20,12 @@ void ServerP::printMacAdd(const uint8_t *mac)
         Serial.printf("%X%c", mac[i], ((i == 5) ? ' ' : ':'));
     }
 }
-
 void ServerP::printLocalMacAdd()
 {
     D_PMA(Serial.println("Start ServerP::printMacAdd()");)
     Serial.print(WiFi.macAddress());
     D_PMA(Serial.println("\nEnd ServerP::printMacAdd()");)
 }
-
 void ServerP::startESPNOW()
 {
     D_SESPNOW(Serial.println("Start ServerP::startESPNOW()");)
@@ -62,7 +64,6 @@ void ServerP::startESPNOW()
     D_SESPNOW(Serial.printf("Register %d stations\n", NBARBURG);)
     D_SESPNOW(Serial.println("End ServerP::startESPNOW()");)
 }
-
 void ServerP::showQ(queue<t_c2s> g)
 {
     queue<t_c2s> temp = g;
@@ -73,7 +74,6 @@ void ServerP::showQ(queue<t_c2s> g)
     }
     D_SHQ(Serial.print("|");)
 }
-queue<t_c2s> qg;
 void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
 {
     D_ODS(Serial.println("Start ServerP::OnDataSent()");)
@@ -118,14 +118,13 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 
     D_ODR(Serial.println("End ServerP::OnDataRecv()");)
 }
-
 void ServerP::printClientInfo(const t_c2s *c2s)
 {
 #define PRINT_STATUS(x) ((x) ? "Up" : "Down")
     Serial.printf("%d[%5s, %5s, %5s]", c2s->ID, PRINT_STATUS(c2s->Freq_sensor),
                   PRINT_STATUS(c2s->Flevel_sensor), PRINT_STATUS(c2s->Areq_sensor));
 }
-void ServerP::checkQ()
+void ServerP::checkSQ()
 {
     if ((qg.front().Freq_sensor == 1 && qg.front().Flevel_sensor == 0) || qg.front().Areq_sensor == 1)
     {
@@ -146,10 +145,9 @@ void ServerP::checkQ()
         }
     }
 }
-t_s2c temps2c;
 void ServerP::broadcast()
 {
-    checkQ();
+    checkSQ();
     D_BRCAST(Serial.println("Start ServerP::broadcast()");)
     if (temps2c.ID != s2c.ID)
     {

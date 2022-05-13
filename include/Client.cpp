@@ -14,6 +14,11 @@ uint8_t ClientP::vlv_drymax;
 
 queue<int> qg;
 
+// Local variables that holds sensors old status
+bool tempFr;
+bool tempAr;
+bool tempFl;
+
 ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, uint8_t sen_feedmax_lvl_pin,
                  uint8_t vlv_charger_pin, uint8_t vlv_feedmax_pin, uint8_t vlv_drymax_pin)
 {
@@ -28,14 +33,12 @@ ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, ui
     vlv_feedmax = vlv_feedmax_pin;
     vlv_drymax = vlv_drymax_pin;
 }
-
 void ClientP::printMacAdd()
 {
     D_PMA(Serial.println("\nStart ClientP::printMacAdd()");)
     Serial.print(WiFi.macAddress());
     D_PMA(Serial.println("\nEnd ClientP::printMacAdd()");)
 }
-
 void ClientP::startESPNOW()
 {
     D_SESPNOW(Serial.println("\nStart ClientP::startESPNOW()");)
@@ -73,14 +76,12 @@ void ClientP::startESPNOW()
     D_SESPNOW(Serial.printf("Server registred\n");)
     D_SESPNOW(Serial.println("End ClientP::startESPNOW()");)
 }
-
 void ClientP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
     D_ODS(Serial.println("Start ClientP::OnDataSent()");)
     c2s.inout.out++;
     D_ODS(Serial.println("End ClientP::OnDataSent()");)
 }
-
 void ClientP::showCQ(queue<int> g)
 {
     queue<int> t = g;
@@ -147,7 +148,6 @@ void ClientP::runClient()
         }
     }
 }
-
 void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     D_ODR(Serial.println("Start ClientP::OnDataRecv()");)
@@ -160,21 +160,6 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     D_ODR(Serial.println("End ClientP::OnDataRecv()");)
     runClient();
 }
-void ClientP::getQS()
-{
-    if (!qg.empty())
-    {
-        c2s.qs = qg.size();
-    }
-    else
-    {
-        c2s.qs = 0;
-    }
-}
-// Local variables that holds sensors old status
-bool tempFr;
-bool tempAr;
-bool tempFl;
 void ClientP::send2server()
 {
     c2s.Freq_sensor = digitalRead(sen_feedmax);
@@ -184,7 +169,6 @@ void ClientP::send2server()
     // Send sensors readings
     if (c2s.Freq_sensor != tempFr || c2s.Areq_sensor != tempAr || c2s.Flevel_sensor != tempFl)
     {
-        getQS();
         esp_err_t result = esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
         tempFr = c2s.Freq_sensor;
         tempAr = c2s.Areq_sensor;
@@ -195,7 +179,6 @@ void ClientP::send2server()
         // D_C2S(Serial.println("End ClientP::send2server()");)
     }
 }
-
 void ClientP::printMacAdd(const uint8_t *mac)
 {
     for (int i = 0; i < 6; i++)

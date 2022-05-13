@@ -33,7 +33,7 @@ public:
   void startESPNOW();
   void broadcast();
   void send2client(const uint8_t *mac, t_s2c s2c);
-  void checkQ();
+  void checkSQ();
   static void showQ(queue<t_c2s> g);
 private:
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
