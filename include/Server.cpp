@@ -37,12 +37,14 @@ void ServerP::printMacAdd(const uint8_t *mac)
         Serial.printf("%X%c", mac[i], ((i == 5) ? ' ' : ':'));
     }
 }
+
 void ServerP::printLocalMacAdd()
 {
     D_PMA(Serial.println("Start ServerP::printMacAdd()");)
     Serial.print(WiFi.macAddress());
     D_PMA(Serial.println("\nEnd ServerP::printMacAdd()");)
 }
+
 void ServerP::startESPNOW()
 {
     D_SESPNOW(Serial.println("Start ServerP::startESPNOW()");)
@@ -81,6 +83,7 @@ void ServerP::startESPNOW()
     D_SESPNOW(Serial.printf("Register %d stations\n", NBARBURG);)
     D_SESPNOW(Serial.println("End ServerP::startESPNOW()");)
 }
+
 void ServerP::showQ(queue<t_c2s> g)
 {
     queue<t_c2s> temp = g;
@@ -91,6 +94,7 @@ void ServerP::showQ(queue<t_c2s> g)
     }
     D_SHQ(Serial.print("|");)
 }
+
 void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
 {
     D_ODS(Serial.println("Start ServerP::OnDataSent()");)
@@ -111,6 +115,7 @@ void ServerP::OnDataSent(const uint8_t *mac, esp_now_send_status_t status)
     }
     D_ODS(Serial.println("\nEnd ServerP::OnDataSent()");)
 }
+
 void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     D_ODR(Serial.println("Start ServerP::OnDataRecv()");)
@@ -135,12 +140,14 @@ void ServerP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 
     D_ODR(Serial.println("End ServerP::OnDataRecv()");)
 }
+
 void ServerP::printClientInfo(const t_c2s *c2s)
 {
 #define PRINT_STATUS(x) ((x) ? "Up" : "Down")
     Serial.printf("%d[%5s, %5s, %5s]", c2s->ID, PRINT_STATUS(c2s->Freq_sensor),
                   PRINT_STATUS(c2s->Flevel_sensor), PRINT_STATUS(c2s->Areq_sensor));
 }
+
 void ServerP::checkSQ()
 {
     if ((qg.front().Freq_sensor == 1 && qg.front().Flevel_sensor == 0) || qg.front().Areq_sensor == 1)
@@ -162,6 +169,7 @@ void ServerP::checkSQ()
         }
     }
 }
+
 void ServerP::runServer()
 {   
     if (s2c.ID == 1 || s2c.ID == 2)
@@ -180,6 +188,7 @@ void ServerP::runServer()
     }
 
 }
+
 void ServerP::broadcast()
 {
     checkSQ();
@@ -197,6 +206,7 @@ void ServerP::broadcast()
     D_BRCAST(Serial.println("End ServerP::broadcast()");)
     // esp_err_t result = esp_now_send(0, (uint8_t *)&s2c, sizeof(s2c));
 }
+
 void ServerP::send2client(const uint8_t *mac, t_s2c s2c)
 {
     D_S2C(Serial.println("Start ServerP::send2client()");)
@@ -205,6 +215,7 @@ void ServerP::send2client(const uint8_t *mac, t_s2c s2c)
     D_S2C(Serial.println("Sending to client %s\n", ((result) ? "succeed" : "failed"));)
     D_S2C(Serial.println("End ServerP::send2client()");)
 }
+
 void ServerP::setupPins(){
     pinMode(central_pump, OUTPUT);
     pinMode(pump_vlv1, OUTPUT);
