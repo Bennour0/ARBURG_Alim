@@ -37,12 +37,14 @@ ClientP::ClientP(uint8_t id, uint8_t sen_feedmax_pin, uint8_t sen_arburg_pin, ui
     vlv_feedmax = vlv_feedmax_pin;
     vlv_drymax = vlv_drymax_pin;
 }
+
 void ClientP::printMacAdd()
 {
     D_PMA(Serial.println("\nStart ClientP::printMacAdd()");)
     Serial.print(WiFi.macAddress());
     D_PMA(Serial.println("\nEnd ClientP::printMacAdd()");)
 }
+
 void ClientP::startESPNOW()
 {
     D_SESPNOW(Serial.println("\nStart ClientP::startESPNOW()");)
@@ -80,12 +82,14 @@ void ClientP::startESPNOW()
     D_SESPNOW(Serial.printf("Server registred\n");)
     D_SESPNOW(Serial.println("End ClientP::startESPNOW()");)
 }
+
 void ClientP::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
     D_ODS(Serial.println("Start ClientP::OnDataSent()");)
     c2s.inout.out++;
     D_ODS(Serial.println("End ClientP::OnDataSent()");)
 }
+
 void ClientP::showCQ(queue<int> g)
 {
     queue<int> t = g;
@@ -95,6 +99,7 @@ void ClientP::showCQ(queue<int> g)
         t.pop();
     }
 }
+
 void ClientP::runClient()
 {
     if (s2c.ID == c2s.ID)
@@ -152,6 +157,7 @@ void ClientP::runClient()
         }
     }
 }
+
 void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
     D_ODR(Serial.println("Start ClientP::OnDataRecv()");)
@@ -164,6 +170,7 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
     D_ODR(Serial.println("End ClientP::OnDataRecv()");)
     runClient();
 }
+
 void ClientP::send2server()
 {
     c2s.Freq_sensor = digitalRead(sen_feedmax);
@@ -183,6 +190,7 @@ void ClientP::send2server()
         // D_C2S(Serial.println("End ClientP::send2server()");)
     }
 }
+
 void ClientP::printMacAdd(const uint8_t *mac)
 {
     for (int i = 0; i < 6; i++)
@@ -194,4 +202,18 @@ void ClientP::printMacAdd(const uint8_t *mac)
 void ClientP::printServer()
 {
     printMacAdd(serverMacAdd);
+}
+
+void ClientP::setupPins(){
+    pinMode(sen_feedmax, INPUT);
+    pinMode(sen_feedmax_lvl, INPUT);
+    pinMode(sen_arburg, INPUT);
+    pinMode(vlv_feedmax, OUTPUT);
+    pinMode(vlv_drymax, OUTPUT);
+    pinMode(vlv_charger, OUTPUT);
+}
+
+void ClientP::begin(){
+    startESPNOW();
+    setupPins();
 }
