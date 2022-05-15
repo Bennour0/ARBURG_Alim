@@ -162,6 +162,24 @@ void ServerP::checkSQ()
         }
     }
 }
+void ServerP::runServer()
+{   
+    if (s2c.ID == 1 || s2c.ID == 2)
+    {
+        digitalWrite(central_pump, HIGH);
+        digitalWrite(pump_vlv1, HIGH);
+        digitalWrite(pump_vlv2, HIGH);
+        digitalWrite(tank_vlv, HIGH);   
+    }
+    else
+    {
+        digitalWrite(central_pump, LOW);
+        digitalWrite(pump_vlv1, LOW);
+        digitalWrite(pump_vlv2, LOW);
+        digitalWrite(tank_vlv, LOW);
+    }
+
+}
 void ServerP::broadcast()
 {
     checkSQ();
@@ -174,6 +192,7 @@ void ServerP::broadcast()
             temps2c.ID = s2c.ID;
             send2client(arburgMacAdd[i], s2c); //2nd attempt of sending thats confirm sending data
         }
+        runServer();
     }
     D_BRCAST(Serial.println("End ServerP::broadcast()");)
     // esp_err_t result = esp_now_send(0, (uint8_t *)&s2c, sizeof(s2c));

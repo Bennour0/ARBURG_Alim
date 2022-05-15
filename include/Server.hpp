@@ -36,6 +36,7 @@ public:
   void send2client(const uint8_t *mac, t_s2c s2c);
   void checkSQ();
   static void showQ(queue<t_c2s> g);
+  void runServer();
   void begin();
 private:
   void setupPins();
