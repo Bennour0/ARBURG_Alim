@@ -5,11 +5,25 @@ t_c2s ServerP::c2s;
 t_s2c ServerP::s2c;
 t_inout ServerP::inout;
 
+//Pins allocations
+uint8_t ServerP::central_pump;
+uint8_t ServerP::pump_vlv1;
+uint8_t ServerP::pump_vlv2;
+uint8_t ServerP::tank_vlv;
+
 //Server Queue declaration
 queue<t_c2s> qg;
 
 //Structure that holds s2c old values
 t_s2c temps2c;
+
+ServerP::ServerP(uint8_t pump_pin, uint8_t vlv1_pin, uint8_t vlv2_pin, uint8_t vlvr_pin)
+{
+    central_pump = pump_pin;
+    pump_vlv1 = vlv1_pin;
+    pump_vlv2 = vlv2_pin;
+    tank_vlv = vlvr_pin;
+}
 
 /**
  * @brief Prints a MAC add
@@ -171,4 +185,15 @@ void ServerP::send2client(const uint8_t *mac, t_s2c s2c)
     esp_now_send(mac, (uint8_t *)&s2c, sizeof(s2c));
     D_S2C(Serial.println("Sending to client %s\n", ((result) ? "succeed" : "failed"));)
     D_S2C(Serial.println("End ServerP::send2client()");)
+}
+void ServerP::setupPins(){
+    pinMode(central_pump, OUTPUT);
+    pinMode(pump_vlv1, OUTPUT);
+    pinMode(pump_vlv2, OUTPUT);
+    pinMode(tank_vlv, OUTPUT);
+}
+
+void ServerP::begin(){
+    startESPNOW();
+    setupPins();
 }

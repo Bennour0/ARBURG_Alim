@@ -29,19 +29,26 @@ using namespace std;
 
 class ServerP{
 public:
+  ServerP(uint8_t pump_pin, uint8_t vlv1_pin, uint8_t vlv2_pin, uint8_t vlvr_pin);
   void printLocalMacAdd(); 
   void startESPNOW();
   void broadcast();
   void send2client(const uint8_t *mac, t_s2c s2c);
   void checkSQ();
   static void showQ(queue<t_c2s> g);
+  void begin();
 private:
+  void setupPins();
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
   static void printMacAdd(const uint8_t * mac);
   static void printClientInfo(const t_c2s *c2s);
   uint8_t arburgMacAdd[NBARBURG][6] = {ADDMAC1, ADDMAC2};
   static t_c2s arburgs_data[NBARBURG];
+  static uint8_t central_pump;
+  static uint8_t pump_vlv1;
+  static uint8_t pump_vlv2;
+  static uint8_t tank_vlv;
   static t_c2s c2s;
   static t_s2c s2c;
   static t_inout inout;
