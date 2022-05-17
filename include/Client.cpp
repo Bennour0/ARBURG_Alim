@@ -206,11 +206,32 @@ void ClientP::printServer()
 
 void ClientP::setupPins(){
     pinMode(sen_feedmax, INPUT);
-    pinMode(sen_feedmax_lvl, INPUT);
+    attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
     pinMode(sen_arburg, INPUT);
+    attachInterrupt(sen_arburg, INT_ARBURG, CHANGE);
+    pinMode(sen_feedmax_lvl, INPUT);
+    attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, CHANGE);
     pinMode(vlv_feedmax, OUTPUT);
     pinMode(vlv_drymax, OUTPUT);
     pinMode(vlv_charger, OUTPUT);
+}
+
+void IRAM_ATTR ClientP::INT_FEEDMAX(){
+    c2s.Freq_sensor = digitalRead(sen_feedmax);
+    D_INTF(Serial.printf("\nFeedmax sensor status changed (%s to %s)\n",
+        PRINT_STATUS(!c2s.Freq_sensor), PRINT_STATUS(c2s.Freq_sensor));)
+}
+
+void IRAM_ATTR ClientP::INT_ARBURG(){
+    c2s.Areq_sensor = digitalRead(sen_arburg);
+    D_INTA(Serial.printf("\nARBURG sensor status changed (%s to %s)\n",
+        PRINT_STATUS(!c2s.Areq_sensor), PRINT_STATUS(c2s.Areq_sensor));)
+}
+
+void IRAM_ATTR ClientP::INT_FEEDMAX_LVL(){
+    c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
+    D_INTFL(Serial.printf("\nFeedmax level sensor status changed (%s to %s)\n",
+        PRINT_STATUS(!c2s.Flevel_sensor), PRINT_STATUS(c2s.Flevel_sensor));)
 }
 
 void ClientP::begin(){

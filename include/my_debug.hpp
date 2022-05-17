@@ -8,6 +8,9 @@
 //#define D_ONDATASENT
 //#define D_ONDATAREC
 #define D_SHOWQUEUE
+#define D_INT_FEEDMAX
+#define D_INT_ARBURG
+#define D_INT_FEEDMAX_LVL
 
 #ifdef MY_DEBUG
   #define D(x) x
@@ -72,3 +75,23 @@
 #else
   #define D_SHQ(x)
 #endif
+
+#ifdef D_INT_FEEDMAX
+  #define D_INTF(x)  D(x)
+#else
+  #define D_INTF(x)
+#endif
+
+#ifdef D_INT_ARBURG
+  #define D_INTA(x)  D(x)
+#else
+  #define D_INTA(x)
+#endif
+
+#ifdef D_INT_FEEDMAX_LVL
+  #define D_INTFL(x)  D(x)
+#else
+  #define D_INTFL(x)
+#endif
+
+#define PRINT_STATUS(x) ((x)?"Up":"Down")
