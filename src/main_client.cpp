@@ -11,11 +11,12 @@ void setup()
     Serial.print("The client mac add : ");
     c.printMacAdd();
     Serial.printf("\nThe server mac add : ");
-    c.printServer();
+    //c.printServer();
     Serial.println();
+    
 }
 void loop()
 {
     c.send2server();
-    delay(1000);
+    c.sendInterruption();
 }

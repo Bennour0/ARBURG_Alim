@@ -1,21 +1,21 @@
 #include "Client.hpp"
 #include "my_debug.hpp"
 
-//Client structures allocations
+// Client structures allocations
 t_c2s ClientP::c2s;
 t_s2c ClientP::s2c;
 
-//Pins allocations
-//Sensors
+// Pins allocations
+// Sensors
 uint8_t ClientP::sen_feedmax;
 uint8_t ClientP::sen_arburg;
 uint8_t ClientP::sen_feedmax_lvl;
-//Valves
+// Valves
 uint8_t ClientP::vlv_charger;
 uint8_t ClientP::vlv_feedmax;
 uint8_t ClientP::vlv_drymax;
 
-//Client Queue declaration
+// Client Queue declaration
 queue<int> qg;
 
 // Local variables that holds sensors old status
@@ -173,7 +173,7 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 
 void ClientP::send2server()
 {
-    c2s.Freq_sensor = digitalRead(sen_feedmax);
+    /*c2s.Freq_sensor = digitalRead(sen_feedmax);
     c2s.Areq_sensor = digitalRead(sen_arburg);
     c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
     // D_C2S(Serial.println("Start ClientP::send2server()");)
@@ -188,7 +188,7 @@ void ClientP::send2server()
                       ((result == ESP_NOW_SEND_FAIL) ? "fail" : "succeed"),
                       c2s.inout.in, c2s.inout.out);
         // D_C2S(Serial.println("End ClientP::send2server()");)
-    }
+    }*/
 }
 
 void ClientP::printMacAdd(const uint8_t *mac)
@@ -204,37 +204,50 @@ void ClientP::printServer()
     printMacAdd(serverMacAdd);
 }
 
-void ClientP::setupPins(){
+void ClientP::setupPins()
+{
     pinMode(sen_feedmax, INPUT);
-    attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
     pinMode(sen_arburg, INPUT);
-    attachInterrupt(sen_arburg, INT_ARBURG, CHANGE);
     pinMode(sen_feedmax_lvl, INPUT);
-    attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, CHANGE);
     pinMode(vlv_feedmax, OUTPUT);
     pinMode(vlv_drymax, OUTPUT);
     pinMode(vlv_charger, OUTPUT);
 }
 
-void IRAM_ATTR ClientP::INT_FEEDMAX(){
+void IRAM_ATTR ClientP::INT_FEEDMAX()
+{
     c2s.Freq_sensor = digitalRead(sen_feedmax);
     D_INTF(Serial.printf("\nFeedmax sensor status changed (%s to %s)\n",
-        PRINT_STATUS(!c2s.Freq_sensor), PRINT_STATUS(c2s.Freq_sensor));)
+                         PRINT_STATUS(!c2s.Freq_sensor), PRINT_STATUS(c2s.Freq_sensor));)
 }
 
-void IRAM_ATTR ClientP::INT_ARBURG(){
+void IRAM_ATTR ClientP::INT_ARBURG()
+{
     c2s.Areq_sensor = digitalRead(sen_arburg);
     D_INTA(Serial.printf("\nARBURG sensor status changed (%s to %s)\n",
-        PRINT_STATUS(!c2s.Areq_sensor), PRINT_STATUS(c2s.Areq_sensor));)
+                         PRINT_STATUS(!c2s.Areq_sensor), PRINT_STATUS(c2s.Areq_sensor));)
 }
 
-void IRAM_ATTR ClientP::INT_FEEDMAX_LVL(){
+void IRAM_ATTR ClientP::INT_FEEDMAX_LVL()
+{
     c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
     D_INTFL(Serial.printf("\nFeedmax level sensor status changed (%s to %s)\n",
-        PRINT_STATUS(!c2s.Flevel_sensor), PRINT_STATUS(c2s.Flevel_sensor));)
+                          PRINT_STATUS(!c2s.Flevel_sensor), PRINT_STATUS(c2s.Flevel_sensor));)
 }
 
-void ClientP::begin(){
+void ClientP::begin()
+{
     startESPNOW();
     setupPins();
+}
+
+void ClientP::sendInterruption()
+{
+    attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
+    attachInterrupt(sen_arburg, INT_ARBURG, CHANGE);
+    attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, CHANGE);
+    if (c2s.Freq_sensor != tempFr || c2s.Areq_sensor != tempAr || c2s.Flevel_sensor != tempFl)
+    {
+        esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
+    }
 }

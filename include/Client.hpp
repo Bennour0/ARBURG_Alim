@@ -26,6 +26,7 @@ public:
   static void showCQ(queue<int> g);
   static void runClient();
   void begin();
+  void sendInterruption();
 private:
   void setupPins();
   static void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
