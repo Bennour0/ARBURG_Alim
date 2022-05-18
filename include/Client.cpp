@@ -173,7 +173,7 @@ void ClientP::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int le
 
 void ClientP::send2server()
 {
-    /*c2s.Freq_sensor = digitalRead(sen_feedmax);
+    c2s.Freq_sensor = digitalRead(sen_feedmax);
     c2s.Areq_sensor = digitalRead(sen_arburg);
     c2s.Flevel_sensor = digitalRead(sen_feedmax_lvl);
     // D_C2S(Serial.println("Start ClientP::send2server()");)
@@ -188,7 +188,7 @@ void ClientP::send2server()
                       ((result == ESP_NOW_SEND_FAIL) ? "fail" : "succeed"),
                       c2s.inout.in, c2s.inout.out);
         // D_C2S(Serial.println("End ClientP::send2server()");)
-    }*/
+    }
 }
 
 void ClientP::printMacAdd(const uint8_t *mac)
@@ -243,11 +243,14 @@ void ClientP::begin()
 
 void ClientP::sendInterruption()
 {
-    attachInterrupt(sen_feedmax, INT_FEEDMAX, CHANGE);
-    attachInterrupt(sen_arburg, INT_ARBURG, CHANGE);
-    attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, CHANGE);
+    attachInterrupt(sen_feedmax, INT_FEEDMAX, HIGH);
+    attachInterrupt(sen_arburg, INT_ARBURG, HIGH);
+    attachInterrupt(sen_feedmax_lvl, INT_FEEDMAX_LVL, HIGH);
     if (c2s.Freq_sensor != tempFr || c2s.Areq_sensor != tempAr || c2s.Flevel_sensor != tempFl)
     {
         esp_now_send(serverMacAdd, (uint8_t *)&c2s, sizeof(c2s));
+        tempFr = c2s.Freq_sensor;
+        tempAr = c2s.Areq_sensor;
+        tempFl = c2s.Flevel_sensor;
     }
 }

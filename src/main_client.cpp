@@ -17,6 +17,6 @@ void setup()
 }
 void loop()
 {
-    c.send2server();
+    //c.send2server();
     c.sendInterruption();
 }
